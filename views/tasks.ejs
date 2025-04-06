@@ -23,9 +23,9 @@
 
         <table id="tasksTable">
             <tr>
-                <th>One</th>
-                <th>Two</th>
-                <th>Three</th>
+                <th>TITLE</th>
+                <th>DESCRIPTION</th>
+                <th></th>
             </tr>
         </table>
     </body>
@@ -48,14 +48,13 @@
                 button.textContent = "i beg you"
                 
                 if (res.ok) {
-                    button.textContent = "Oui"
-
                     const table = document.getElementById("tasksTable");
                     const row = document.createElement("tr");
                     const nameCell = document.createElement("td");
                     const descCell = document.createElement("td");
                     const buttonCell = document.createElement("td");
                     const removeButton = document.createElement("button");
+                    removeButton.textContent = "Delete"
 
                     removeButton.addEventListener("click", async () => {
                         try {
@@ -80,7 +79,7 @@
                     row.appendChild(buttonCell);
                     table.appendChild(row);
                 } else {
-                    button.textContent = "non"
+                    // button.textContent = "non"
                 };
             } catch (error) {
                 console.error(error);
