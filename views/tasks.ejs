@@ -1,0 +1,90 @@
+
+<html>
+    <head>
+        <link rel="stylesheet" href="/css/tasks.css">
+    </head>
+
+    <body>
+        <div class="topcontainer">
+            <h1>MY TASKS</h1>
+        </div>
+
+        <div class="addcontainer">
+            <div class="group">
+                <label for="taskName">Task Name</label><br>
+                <input type="text" id="taskName" placeholder="Task Name">
+            </div>
+            <div class="group">
+                <label for="taskDescription">Task Description</label><br>
+                <input type="text" id="taskDescription" placeholder="Description">
+            </div>
+            <button id="addButton">Add</button>
+        </div>
+
+        <table id="tasksTable">
+            <tr>
+                <th>One</th>
+                <th>Two</th>
+                <th>Three</th>
+            </tr>
+        </table>
+    </body>
+
+    <script>
+        const button = document.getElementById("addButton");
+        button.addEventListener("click", async () => {
+            const taskName = document.getElementById("taskName").value.trim();
+            const taskDesc = document.getElementById("taskDescription").value.trim();
+
+            const data = { taskName, taskDesc }
+
+            try {
+                const res = await fetch("/tasks/add", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                });
+
+                button.textContent = "i beg you"
+                
+                if (res.ok) {
+                    button.textContent = "Oui"
+
+                    const table = document.getElementById("tasksTable");
+                    const row = document.createElement("tr");
+                    const nameCell = document.createElement("td");
+                    const descCell = document.createElement("td");
+                    const buttonCell = document.createElement("td");
+                    const removeButton = document.createElement("button");
+
+                    removeButton.addEventListener("click", async () => {
+                        try {
+                            const deleteRes = await fetch(`/tasks/delete/${taskName}`, {
+                                method: "DELETE",
+                            });
+
+                            if (deleteRes.ok) {
+                                row.remove();
+                            }
+                        } catch (error) {
+                            console.error("Error deleting task:", error);
+                        }
+                    });
+
+                    nameCell.textContent = taskName;
+                    descCell.textContent = taskDesc;
+
+                    buttonCell.appendChild(removeButton);
+                    row.appendChild(nameCell);
+                    row.appendChild(descCell);
+                    row.appendChild(buttonCell);
+                    table.appendChild(row);
+                } else {
+                    button.textContent = "non"
+                };
+            } catch (error) {
+                console.error(error);
+            }
+        })
+    </script>
+</html>
